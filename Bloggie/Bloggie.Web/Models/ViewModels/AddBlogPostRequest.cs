@@ -1,4 +1,5 @@
 ﻿using Bloggie.Web.Models.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bloggie.Web.Models.ViewModels
 {
@@ -13,5 +14,8 @@ namespace Bloggie.Web.Models.ViewModels
         public DateTime PublishDate { get; set; }
         public string Author { get; set; }
         public bool Visible { get; set; }
+
+        public IEnumerable<SelectListItem> Tags { get; set; }
+        public string[] SelectedTags { get; set; } = Array.Empty<string>();
     }
 }
