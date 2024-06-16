@@ -1,5 +1,6 @@
 ﻿using Bloggie.Web.Data;
 using Bloggie.Web.Models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bloggie.Web.Repositories
 {
@@ -18,22 +19,22 @@ namespace Bloggie.Web.Repositories
             return blogPost;
         }
 
-        public Task<BlogPost> DeleteBlogPost(Guid id)
+        public Task<BlogPost?> DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<BlogPost>> GetAllAsync()
+        public async Task<IEnumerable<BlogPost>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await bloggieDbContext.BlogPosts.Include(x => x.Tags).ToListAsync();
         }
 
-        public Task<BlogPost> GetAsync(Guid id)
+        public async Task<BlogPost?> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await bloggieDbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<BlogPost> UpdateBlogPost(BlogPost blogPost)
+        public Task<BlogPost?> UpdateAsync(BlogPost blogPost)
         {
             throw new NotImplementedException();
         }
