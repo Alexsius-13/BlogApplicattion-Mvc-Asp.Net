@@ -39,6 +39,20 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Featured Image Upload</label>
+            <input type="file" id="featuredImageUpload" class="form-control"/>
+            
+            @if(Model.FeaturedImgUrl != null)
+            {
+                <img src="@Model.FeaturedImgUrl" id="featuredImageDisplay" style="display:block; width: 300px; margin-top: 15px;" />
+            }
+            else
+            {
+                <img src="" id="featuredImageDisplay" style="display:none; width: 300px; margin-top: 15px;" />
+            }  
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">Featured Image Url</label>
             <input type="text" class="form-control" id="featuredImgUrl" asp-for="FeaturedImgUrl" />
         </div>
@@ -87,6 +101,35 @@
 
 @section Scripts {
     <script>
-        var editor = new FroalaEditor('#content');
+        var editor = new FroalaEditor('#content', {
+            imageUploadURL: '/api/images'
+        });
+
+        const featuredUploadElement = document.getElementById('featuredImageUpload');
+        const featuredImgUrlElement = document.getElementById('featuredImgUrl');
+        const featuredImageDisplayElement = document.getElementById('featuredImageDisplay');
+
+
+        async function uploadFeaturedImage(e) {
+            console.log(e.target.files[0]);
+
+            let data = new FormData();
+            data.append('file', e.target.files[0]);
+
+            await fetch('/api/images', {
+                method: 'POST',
+                headers: {
+                    'Accept': '*/*',
+                },
+                body: data
+            }).then(response => response.json())
+                .then(result => {
+                    featuredImgUrlElement.value = result.link;
+                    featuredImageDisplayElement.src = result.link;
+                    featuredImageDisplayElement.style.display = 'block';
+                });
+        }
+
+        featuredUploadElement.addEventListener('change', uploadFeaturedImage);
     </script>
 }
