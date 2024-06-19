@@ -23,7 +23,7 @@ namespace Bloggie.Web.Controllers
 
             var model = new AddBlogPostRequest
             {
-                Tags = tags.Select(x => new SelectListItem { Text = x.DisplayName, Value = x.Id.ToString() }),
+                Tags = tags.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
             };
 
             return View(model);
