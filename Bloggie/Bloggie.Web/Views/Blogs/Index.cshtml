@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> signInManager
 @inject UserManager<IdentityUser> userManager
+
 @model Bloggie.Web.Models.ViewModels.BlogDetailsViewModel
 
 @{
@@ -40,10 +41,10 @@
 				</div>
 
 				<div class="mb-3 d-flex">
-					@foreach (var tag in Model.Tags)
-					{
-						<span class="badge bg-secondary me-1">@tag.Name</span>
-					}
+						@foreach (var tag in Model.Tags)
+						{
+							<span class="badge bg-secondary me-1">@tag.Name</span>
+						}
 				</div>
 
 				<img src="@Model.FeaturedImgUrl" class="d-block img-fluid mb-3"/>
@@ -71,7 +72,23 @@
 						}
 					</div>
 					<div class="card-body">
-
+						@if(Model.Comments != null && Model.Comments.Any())
+						{
+							@foreach (var comment in Model.Comments)
+							{
+								<div class="card mb-3">
+									<div class="card-body">
+										<div>
+											@comment.Description
+										</div>
+										<div class="d-flex justify-content-between">
+											<span class="text-secondary">@comment.Username</span>
+											<span class="text-secondary">@comment.DateAdded.ToShortDateString()</span>
+										</div>
+									</div>
+								</div>
+							}
+						}
 					</div>
 				</div>
 
