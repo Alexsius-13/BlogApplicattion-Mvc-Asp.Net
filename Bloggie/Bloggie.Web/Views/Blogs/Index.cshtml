@@ -52,6 +52,29 @@
 					@Html.Raw(Model.Content)
 				</div>
 
+				<div class="card">
+					<div class="card-header">
+						<h5>Comments</h5>
+						@if (signInManager.IsSignedIn(User))
+						{
+							<form method="post">
+								<div class="mb-3">
+									<label class="form-label">Comment Description</label>
+									<input type="text" class="form-control" asp-for="CommentDescription"/>
+								</div>
+								<div class="mb-3">
+									<button type="submit" class="btn btn-dark">Submit</button>
+									<input type="hidden" asp-for="Id"/>
+									<input type="hidden" asp-for="UrlHandler" />
+								</div>
+							</form>
+						}
+					</div>
+					<div class="card-body">
+
+					</div>
+				</div>
+
 			}
 			else
 			{
