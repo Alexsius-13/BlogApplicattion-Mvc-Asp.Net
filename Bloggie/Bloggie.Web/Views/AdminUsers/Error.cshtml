@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Error";
+}
+
+<div class="container py-5">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">Operation Failed</h4>
+        <p>@ViewData["ErrorMessage"]</p>
+        <hr>
+        <a href="@Url.Action("List", "AdminUsers")" class="btn btn-primary">Back to Users List</a>
+    </div>
+</div>

@@ -71,5 +71,31 @@ namespace Bloggie.Web.Controllers
 
 			return View();
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> Delete(Guid id)
+		{
+            var currentUser = await userManager.GetUserAsync(User);
+
+            if (currentUser != null && currentUser.Id == id.ToString())
+            {
+                ViewData["ErrorMessage"] = "You cannot delete yourself.";
+                return View("Error");
+            }
+
+            var user = await userManager.FindByIdAsync(id.ToString());
+
+			if(user != null)
+			{
+				var identityResult = await userManager.DeleteAsync(user);
+
+				if (identityResult != null && identityResult.Succeeded)
+				{
+					return RedirectToAction("List", "AdminUsers");
+				}
+			}
+
+			return View();
+		}
 	}
 }
