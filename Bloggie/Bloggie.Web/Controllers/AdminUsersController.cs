@@ -42,6 +42,11 @@ namespace Bloggie.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> List(UserViewModel request)
 		{
+			if (!ModelState.IsValid)
+			{
+				return View(request);
+			}
+
 			var identityUser = new IdentityUser
 			{
 				UserName = request.Username,
@@ -83,19 +88,35 @@ namespace Bloggie.Web.Controllers
                 return View("Error");
             }
 
-            var user = await userManager.FindByIdAsync(id.ToString());
+            var userToDelete = await userManager.FindByIdAsync(id.ToString());
 
-			if(user != null)
-			{
-				var identityResult = await userManager.DeleteAsync(user);
+            if (userToDelete == null)
+            {
+                ViewData["ErrorMessage"] = "User not found.";
+                return View("Error");
+            }
 
-				if (identityResult != null && identityResult.Succeeded)
-				{
-					return RedirectToAction("List", "AdminUsers");
-				}
-			}
+            
+            var isUserToDeleteAdmin = await userManager.IsInRoleAsync(userToDelete, "Admin");
 
-			return View();
-		}
+            
+            var isCurrentUserSuperAdmin = await userManager.IsInRoleAsync(currentUser, "SuperAdmin");
+
+            if (isUserToDeleteAdmin && !isCurrentUserSuperAdmin)
+            {
+                ViewData["ErrorMessage"] = "Only superadmins can delete other admins.";
+                return View("Error");
+            }
+
+            var identityResult = await userManager.DeleteAsync(userToDelete);
+
+            if (identityResult != null && identityResult.Succeeded)
+            {
+                return RedirectToAction("List", "AdminUsers");
+            }
+
+            ViewData["ErrorMessage"] = "User could not be deleted.";
+            return View("Error");
+        }
 	}
 }
